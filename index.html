@@ -27,10 +27,10 @@
     />
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   </head>
-  <body>
+  <body class="bg-[#F8FAFC]">
     <!-- Nav-Bar -->
     <nav>
-      <div class="navbar bg-base-100 shadow-sm flex justify-between">
+      <div class="navbar bg-white shadow-sm flex justify-between">
         <div class="flex items-center gap-2 px-4">
           <img src="./assets/github-logo.png" alt="github-logo" class="w-9" />
           <p class="text-xl font-semibold">GitHub Issue Tracker</p>
@@ -48,5 +48,56 @@
       </div>
     </nav>
     <!-- Nav-Bar done!!-->
+    <main class="h-svh">
+      <!-- Button-Bundle -->
+      <div
+        class="bg-white p-6 mx-auto my-8 w-10/12 rounded-xl shadow-sm flex gap-3"
+      >
+        <button class="btn btn-outline btn-primary">All</button>
+        <button class="btn btn-outline btn-primary">Open</button>
+        <button class="btn btn-outline btn-primary">Closed</button>
+      </div>
+      <!-- Button-Bundle done-->
+      <!-- status bar -->
+      <div
+        class="status-bar bg-white px-6 py-3 mx-auto my-2 w-10/12 rounded-xl flex items-center justify-between"
+      >
+        <!-- icon + title text -->
+        <div class="flex gap-2 items-center">
+          <img
+            src="./assets/Aperture.png"
+            alt="logo"
+            class="bg-[#ECE4FF] p-2 rounded-full"
+          />
+          <div class="">
+            <p class="issue-Num font-bold">{$}Issues</p>
+            <p class="text-[#64748B]">Track and manage your project issues</p>
+          </div>
+        </div>
+        <!-- icon + title text done-->
+        <!-- open or close signal -->
+        <div class="p-4 flex gap-2 justify-center">
+          <div class="p-4 flex justify-center items-center gap-2">
+            <div class="w-3 p-2 bg-[#00A96E] rounded-full"></div>
+            <span>Open</span>
+          </div>
+          <div class="p-4 flex justify-center items-center gap-2">
+            <div class="w-3 p-2 bg-[#A855F7] rounded-full"></div>
+            <span>Closed</span>
+          </div>
+        </div>
+        <!-- open or close signal end -->
+      </div>
+      <!-- status bar done-->
+      <div
+        id="classContainer"
+        class="class-container p-4 mx-auto w-10/12 rounded-xl grid grid-cols-3 gap-4"
+      >
+        
+            
+          </div>
+          
+    </main>
+    <script src="./function.js" ></script>
   </body>
 </html>
