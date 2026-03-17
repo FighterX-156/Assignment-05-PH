@@ -1,94 +1,176 @@
-//Card Loader
- let borderColor;
- let src;
- let priorityBgColor;
- let priorityTxtColor;
+// //Card Loader
+let borderColor;
+let src;
+let priorityBgColor;
+let priorityTxtColor;
 
+const cardLoader = () => {
+  fetch("https://phi-lab-server.vercel.app/api/v1/lab/issues")
+    .then((response) => response.json())
+    .then((json) => displayCards(json.data));
+};
 
-const cardLoader=()=>{
-    fetch("https://phi-lab-server.vercel.app/api/v1/lab/issues")
-    .then((response)=>response.json())
-    .then((json)=>displayCards(json.data));
+const displayCards = (cards) => {
+  for (let card of cards) {
+    console.log(cards.length);
+    console.log(card.labels.length);
+  }
+  const issueNum = document.querySelector(".issueNumber");
+  issueNum.innerHTML = "";
+  const issueNumDiv = document.createElement("div");
+  issueNumDiv.innerHTML = `
+        <p class="issue-Num font-bold">${cards.length} Issues</p>
+        <p class="text-[#64748B]">Track and manage your project issues</p>
+    `;
+  issueNum.append(issueNumDiv);
+
+  const cardContainer = document.getElementById("classContainer");
+  cardContainer.innerHTML = ``;
+
+  for (let card of cards) {
+    const cardDiv = document.createElement("div");
+
+    // Condition for top border color
+    if (card.status === "open") {
+      borderColor = "#00A96E";
+      src = "./assets/Open-Status.png";
+    } else {
+      borderColor = "#A855F7";
+      src = "./assets/Closed- Status .png";
+    }
+
+    // Condition for priority color
+    if (card.priority === "high") {
+      priorityBgColor = "#FAD4D4";
+      priorityTxtColor = "#B31313";
+    } else if (card.priority === "medium") {
+      priorityBgColor = "#FFF6D1";
+      priorityTxtColor = "#F59E0B";
+    } else {
+      priorityBgColor = "#EEEFF2";
+      priorityTxtColor = "#9CA3AF";
+    }
+
+    cardDiv.innerHTML = `
+            <div class="card bg-base-100 p-4 h-11/12 text-base shadow-sm border-[${borderColor}] border-t-6 flex flex-col justify-center">
+                <div class="top-status p-1 flex justify-between">
+                    <img src="${src}" alt="Open-status" class="status-icon" />
+                    <div class="priority border px-4 bg-[${priorityBgColor}] text-[${priorityTxtColor}] text-center rounded-xl">
+                        ${card.priority}
+                    </div>
+                </div>
+                <div class="desc-label m-3 space-y-3">
+                    <div class="problem-descBox">
+                        <p class="problem-title font-bold text-lg">${card.title}</p>
+                        <p class="problem-desc font-light">${card.description}</p>
+                    </div>
+                    <div class="labels flex justify-between"></div> <!-- Labels will go here -->
+                </div>
+                <hr />
+                <div class="identity&date p-3">
+                    <p class="author-name">${card.author}</p>
+                    <p class="issue-date">${card.createdAt}</p>
+                </div>
+            </div>
+        `;
+
+    cardContainer.append(cardDiv);
+
+    // add labels to the card
+    const cardLabelsContainer = cardDiv.querySelector(".labels");
+    addLabels(cardLabelsContainer, card.labels);
+    //  open modal
+    const event = cardDiv.querySelector(".card");
+    event.addEventListener("click", function () {
+      my_modal_1.showModal();
+
+      const modalContainer = document.querySelector(".modal-box");
+      modalContainer.innerHTML = "";
+       if (card.priority === "high") {
+      priorityBgColor = "#EF4444";
+     
+    } else if (card.priority === "medium") {
+      priorityBgColor = "#F59E0B";
+      
+    } else {
+      priorityBgColor = "#9CA3AF";
+    
+    }
+      const modalDiv = document.createElement("div");
+      modalDiv.innerHTML = `
+                <h3 class="text-lg font-bold">${card.title}</h3>
+                <div class="status-div flex items-center gap-2 py-2">
+                    <div class="status w-2/12 p-3 bg-[${borderColor}] text-[white] rounded-xl flex justify-center items-center">
+                        <p class="text-xs font-bold">${card.status}</p>
+                    </div>
+                    <div class="p-1 h-1 rounded-full bg-slate-300"></div>
+                    <p>Opened by ${ card.assignee.length ===0? card.assignee ="Not Found":card.assignee}</p>
+                    <div class="p-1 h-1 rounded-full bg-slate-300"></div>
+                    <p>${card.updatedAt}</p>
+                </div>
+                <div class="labels w-9/12 my-2 flex gap-4 items-center"></div> <!-- Labels will go here -->
+                <div class="my-2 font-thin">
+                    <p>${card.description}</p>
+                </div>
+                <div class="p-2 rounded-lg text-xs flex justify-around bg-[#F8FAFC]">
+                    <div class="flex flex-col justify-between">
+                        <p class="text-base font-medium text-[#64748B]">Assignee:</p>
+                        <p class="text-base font-semibold">${card.assignee}</p>
+                    </div>
+                    <div class="flex flex-col justify-between w-3/12">
+                        <p class="text-base font-medium text-[#64748B]">Priority:</p>
+                        <div class=" px-2 py-1 bg-[${priorityBgColor}] rounded-xl flex justify-center items-center">
+                            <p class="font-bold text-center text-[white]">${card.priority}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-action">
+                    <form method="dialog">
+                        <button class="btn bg-[#4A00FF] text-[white]">Close</button>
+                    </form>
+                </div>
+            `;
+
+      modalContainer.appendChild(modalDiv);
+
+      // add labels to the modal
+      const modalLabelsContainer = modalDiv.querySelector(".labels");
+      addLabels(modalLabelsContainer, card.labels);
+    });
+  }
+};
+
+function addLabels(container, labelsArray) {
+  container.innerHTML = "";
+
+  for (let labelName of labelsArray) {
+    let labelBgColor, labelTxtColor, labelIcon;
+
+    const lbl = labelName.trim().toLowerCase();
+
+    if (lbl === "bug") {
+      labelBgColor = "#FAD4D4";
+      labelTxtColor = "#B31313";
+      labelIcon = `<i class="fa-solid fa-bug"></i>`;
+    } else if (lbl === "help wanted") {
+      labelBgColor = "#FFF8DB";
+      labelTxtColor = "#CA8A04";
+      labelIcon = `<i class="fa-solid fa-handshake-angle"></i>`;
+    } else {
+      labelBgColor = "#DEFCE8";
+      labelTxtColor = "#16A34A";
+      labelIcon = `<i class="fa-solid fa-tag"></i>`;
+    }
+
+    const labelDiv = document.createElement("div");
+    labelDiv.innerHTML = `
+            <div class="type-label border px-3 w-[100%] bg-[${labelBgColor}] text-[${labelTxtColor}] text-sm rounded-xl flex gap-1 items-center justify-center">
+                ${labelIcon} ${labelName}
+            </div>
+        `;
+
+    container.appendChild(labelDiv);
+  }
 }
-const displayCards=(cards)=>{
-     console.log(cards)
-     for(let card of cards){
-             console.log(card)
-     }
-    //get empty container
-   const cardContainer=document.getElementById("classContainer")
-  
-   cardContainer.innerHTML=``
-   for(let card of cards){
-    console.log(card.id)
-    const cardDiv=document.createElement("div")
-   //conditions
-     //condition for top border color
-     if(card.status==="open"){
-       borderColor="#00A96E";
-       src="./assets/Open-Status.png"
-     }
-     else{
-      borderColor="#A855F7"
-       src="./assets/Closed- Status .png"
-     }
-     //condition for top border color
-     if(card.priority==="high"){
-       priorityBgColor="#FAD4D4";
-       priorityTxtColor="#B31313"
-     }
-     else if(card.priority==="medium"){
-      priorityBgColor="#FFF6D1"
-      priorityTxtColor="#F59E0B"
-     }
-     else{
-        priorityBgColor="#EEEFF2"
-        priorityTxtColor="#9CA3AF"
-     }
-    cardDiv.innerHTML=`
-    <div class="card bg-base-100  p-6 shadow-sm border-[${borderColor}] border-t-6 flex flex-col ">
-          <div class="top-status flex justify-between">
-            <img
-              src="${src}"
-              alt="Open-status"
-              class="status-icon"
-            />
-            <div
-              class="priority border px-4 bg-[${priorityBgColor}] text-[${priorityTxtColor}] text-center rounded-xl"
-            >
-              ${card.priority}
-            </div>
-          </div>
-          <div class="desc-lebel m-3 space-y-3">
-            <div class="problem-descBox">
-              <p class="problem-title font-bold text-lg">
-                ${card.title}
-              </p>
-              <p class="problem-desc font-light">
-                ${card.description}
-              </p>
-            </div>
 
-            <div class="lebels flex justify-between">
-              <div
-                class="type-lebel border px-3 bg-[#FAD4D4] text-[#B31313] text-center rounded-xl flex gap-1 items-center justify-center"
-              >
-                <i class="fa-solid fa-bug"></i>Bug
-              </div>
-              <div
-                class="wanted-lebel border px-3 bg-[#FAD4D4] text-[#B31313] text-center rounded-xl flex gap-1 items-center justify-center"
-              >
-                <i class="fa-solid fa-handshake-angle"></i>Help wanted
-              </div>
-            </div>
-          </div>
-          <hr />
-          <div class="identity&date m-3">
-            <p class="author-name">#1 by john_doe</p>
-            <p class="issue-date">1/15/2024</p>
-          </div>
-    `
-    cardContainer.append(cardDiv)
-   }
-}
 cardLoader();
