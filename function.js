@@ -3,6 +3,7 @@ let borderColor;
 let src;
 let priorityBgColor;
 let priorityTxtColor;
+let openArr = [];
 
 const cardLoader = () => {
   fetch("https://phi-lab-server.vercel.app/api/v1/lab/issues")
@@ -11,10 +12,10 @@ const cardLoader = () => {
 };
 
 const displayCards = (cards) => {
-  for (let card of cards) {
-    console.log(cards.length);
-    console.log(card.labels.length);
-  }
+  // for (let card of cards) {
+  //   console.log(cards.length);
+  //   console.log(card.labels.length);
+  // }
   const issueNum = document.querySelector(".issueNumber");
   issueNum.innerHTML = "";
   const issueNumDiv = document.createElement("div");
@@ -52,6 +53,7 @@ const displayCards = (cards) => {
     }
 
     cardDiv.innerHTML = `
+             <p class="${card.id}"></p>
             <div class="card bg-base-100 p-4 h-11/12 text-base shadow-sm border-[${borderColor}] border-t-6 flex flex-col justify-center">
                 <div class="top-status p-1 flex justify-between">
                     <img src="${src}" alt="Open-status" class="status-icon" />
@@ -86,16 +88,20 @@ const displayCards = (cards) => {
 
       const modalContainer = document.querySelector(".modal-box");
       modalContainer.innerHTML = "";
-       if (card.priority === "high") {
-      priorityBgColor = "#EF4444";
-     
-    } else if (card.priority === "medium") {
-      priorityBgColor = "#F59E0B";
-      
-    } else {
-      priorityBgColor = "#9CA3AF";
-    
-    }
+      //card status
+      if (card.status === "open") {
+        borderColor = "#00A96E";
+      } else {
+        borderColor = "#A855F7";
+      }
+      //priority status
+      if (card.priority === "high") {
+        priorityBgColor = "#EF4444";
+      } else if (card.priority === "medium") {
+        priorityBgColor = "#F59E0B";
+      } else {
+        priorityBgColor = "#9CA3AF";
+      }
       const modalDiv = document.createElement("div");
       modalDiv.innerHTML = `
                 <h3 class="text-lg font-bold">${card.title}</h3>
@@ -104,7 +110,7 @@ const displayCards = (cards) => {
                         <p class="text-xs font-bold">${card.status}</p>
                     </div>
                     <div class="p-1 h-1 rounded-full bg-slate-300"></div>
-                    <p>Opened by ${ card.assignee.length ===0? card.assignee ="Not Found":card.assignee}</p>
+                    <p>Opened by ${card.assignee.length === 0 ? (card.assignee = "Not Found") : card.assignee}</p>
                     <div class="p-1 h-1 rounded-full bg-slate-300"></div>
                     <p>${card.updatedAt}</p>
                 </div>
@@ -174,3 +180,101 @@ function addLabels(container, labelsArray) {
 }
 
 cardLoader();
+//search function
+
+document.getElementById("btn-search").addEventListener("click", function () {
+  const input = document.getElementById("search-box");
+  const search = input.value.trim().toLowerCase();
+  fetch(
+    `https://phi-lab-server.vercel.app/api/v1/lab/issues/search?q=${search}`,
+  )
+    .then((response) => response.json())
+    .then((json) => searchItems(json.data));
+
+  const searchItems = (items) => {
+    console.log(items);
+    for (let item of items) {
+      const cards = document.querySelectorAll(".card");
+      for (let card of cards) {
+        card.classList.remove("hidden");
+      }
+      if (item.title.trim().toLowerCase().includes(search)) {
+        displayCards(items);
+      }
+    }
+  };
+  console.log(searchItems);
+});
+
+document.getElementById("btnOpen").addEventListener("click", function () {
+  toggling("btnOpen");
+  openArr = [];
+  const cards = document.querySelectorAll(".card");
+  // all card hidden
+  for (let card of cards) {
+    card.classList.add("hidden");
+  }
+  fetch("https://phi-lab-server.vercel.app/api/v1/lab/issues")
+    .then((response) => response.json())
+    .then((json) => displayOpenCards(json.data));
+  const displayOpenCards = (Cards) => {
+    for (let Card of Cards) {
+      if (Card.status === "open") {
+        openArr.push(Card);
+      }
+    }
+
+    displayCards(openArr);
+  };
+});
+
+document.getElementById("btnClosed").addEventListener("click", function () {
+  openArr = [];
+  toggling("btnClosed");
+  const cards = document.querySelectorAll(".card");
+  // all card hidden
+  for (let card of cards) {
+    card.classList.add("hidden");
+  }
+  fetch("https://phi-lab-server.vercel.app/api/v1/lab/issues")
+    .then((response) => response.json())
+    .then((json) => displayClosedCards(json.data));
+  const displayClosedCards = (Cards) => {
+    for (let Card of Cards) {
+      if (Card.status === "closed") {
+        openArr.push(Card);
+      }
+    }
+
+    displayCards(openArr);
+  };
+});
+
+document.getElementById("btnAll").addEventListener("click", function () {
+  toggling("btnAll");
+  fetch("https://phi-lab-server.vercel.app/api/v1/lab/issues")
+    .then((response) => response.json())
+    .then((json) => displayClosedCards(json.data));
+  const displayClosedCards = (Cards) => {
+    displayCards(Cards);
+  };
+});
+
+function toggling(id) {
+  console.log(id);
+  const buttons = document.querySelectorAll(".btnA");
+
+  buttons.forEach((button) => {
+    button.classList.remove("btn-primary");
+    button.classList.remove("btn-outline");
+
+    button.classList.remove("btn-outline");
+    button.classList.remove("bg-[#4a00ff]");
+    button.classList.remove("text-[white]");
+  });
+  const selectedBtn = document.getElementById(id);
+  selectedBtn.classList.add("btn-primary");
+  selectedBtn.classList.add("btn-outline");
+  selectedBtn.classList.add("bg-[#4a00ff]");
+  selectedBtn.classList.add("text-[white]");
+}
