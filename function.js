@@ -5,17 +5,26 @@ let priorityBgColor;
 let priorityTxtColor;
 let openArr = [];
 
+function loading(status){
+  if(status==true){
+      document.getElementById("loading").classList.remove("hidden")
+      document.getElementById("classContainer").classList.add("hidden")
+  }
+  else{
+     document.getElementById("loading").classList.add("hidden")
+      document.getElementById("classContainer").classList.remove("hidden")
+  }
+
+}
 const cardLoader = () => {
+  loading(true)
   fetch("https://phi-lab-server.vercel.app/api/v1/lab/issues")
     .then((response) => response.json())
     .then((json) => displayCards(json.data));
 };
 
 const displayCards = (cards) => {
-  // for (let card of cards) {
-  //   console.log(cards.length);
-  //   console.log(card.labels.length);
-  // }
+  
   const issueNum = document.querySelector(".issueNumber");
   issueNum.innerHTML = "";
   const issueNumDiv = document.createElement("div");
@@ -66,7 +75,7 @@ const displayCards = (cards) => {
                         <p class="problem-title font-bold text-lg">${card.title}</p>
                         <p class="problem-desc font-light">${card.description}</p>
                     </div>
-                    <div class="labels flex justify-between"></div> <!-- Labels will go here -->
+                    <div class="labels flex flex-col gap-2 md:flex-row justify-between"></div> <!-- Labels will go here -->
                 </div>
                 <hr />
                 <div class="identity&date p-3">
@@ -114,7 +123,7 @@ const displayCards = (cards) => {
                     <div class="p-1 h-1 rounded-full bg-slate-300"></div>
                     <p>${card.updatedAt}</p>
                 </div>
-                <div class="labels w-9/12 my-2 flex gap-4 items-center"></div> <!-- Labels will go here -->
+                <div class="labels w-9/12 my-2 flex flex-col items-start md:flex-row gap-4 items-center"></div> 
                 <div class="my-2 font-thin">
                     <p>${card.description}</p>
                 </div>
@@ -144,6 +153,7 @@ const displayCards = (cards) => {
       addLabels(modalLabelsContainer, card.labels);
     });
   }
+  loading(false)
 };
 
 function addLabels(container, labelsArray) {
@@ -185,6 +195,7 @@ cardLoader();
 document.getElementById("btn-search").addEventListener("click", function () {
   const input = document.getElementById("search-box");
   const search = input.value.trim().toLowerCase();
+  loading(true)
   fetch(
     `https://phi-lab-server.vercel.app/api/v1/lab/issues/search?q=${search}`,
   )
@@ -214,6 +225,7 @@ document.getElementById("btnOpen").addEventListener("click", function () {
   for (let card of cards) {
     card.classList.add("hidden");
   }
+  loading(true)
   fetch("https://phi-lab-server.vercel.app/api/v1/lab/issues")
     .then((response) => response.json())
     .then((json) => displayOpenCards(json.data));
@@ -236,6 +248,7 @@ document.getElementById("btnClosed").addEventListener("click", function () {
   for (let card of cards) {
     card.classList.add("hidden");
   }
+  loading(true)
   fetch("https://phi-lab-server.vercel.app/api/v1/lab/issues")
     .then((response) => response.json())
     .then((json) => displayClosedCards(json.data));
@@ -252,6 +265,7 @@ document.getElementById("btnClosed").addEventListener("click", function () {
 
 document.getElementById("btnAll").addEventListener("click", function () {
   toggling("btnAll");
+  loading(true)
   fetch("https://phi-lab-server.vercel.app/api/v1/lab/issues")
     .then((response) => response.json())
     .then((json) => displayClosedCards(json.data));
@@ -261,7 +275,7 @@ document.getElementById("btnAll").addEventListener("click", function () {
 });
 
 function toggling(id) {
-  console.log(id);
+  
   const buttons = document.querySelectorAll(".btnA");
 
   buttons.forEach((button) => {

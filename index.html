@@ -64,20 +64,20 @@
         class="status-bar bg-white px-6 py-3 mx-auto my-2 w-10/12 rounded-xl flex items-center justify-between"
       >
         <!-- icon + title text -->
-        <div class="flex gap-2 items-center">
+        <div class="flex flex-col  md:flex-row gap-2 items-center">
           <img
             src="./assets/Aperture.png"
             alt="logo"
-            class="bg-[#ECE4FF] p-2 rounded-full"
+            class="bg-[#ECE4FF] p-2 rounded-full self-start"
           />
-          <div class="issueNumber">
+          <div class="issueNumber flex flex-row gap-6 md:flex-col ">
             <p class="issue-Num font-bold">{$}Issues</p>
             <p class="text-[#64748B]">Track and manage your project issues</p>
           </div>
         </div>
         <!-- icon + title text done-->
         <!-- open or close signal -->
-        <div class="p-4 flex gap-2 justify-center">
+        <div class="p-4 flex flex-col md:flex-row gap-2 justify-center">
           <div class="p-4 flex justify-center items-center gap-2">
             <div class="w-3 p-2 bg-[#00A96E] rounded-full"></div>
             <span>Open</span>
@@ -92,8 +92,14 @@
       <!-- status bar done-->
       <div
         id="classContainer"
-        class="class-container p-4 mx-auto w-10/12 rounded-xl grid grid-cols-3 gap-4"
-      ></div>
+        class="class-container p-4 mx-auto w-10/12 rounded-xl grid grid-cols-1     md:grid-cols-3 gap-4"
+      > </div>
+    <section id="loading" class="Loading flex items-center justify-center py-10 hidden">
+      <span class="loading loading-infinity loading-xl text-primary ">
+      </span>
+    </section>
+    
+   
       <!-- Open the modal using ID.showModal() method -->
       <!-- <button class="btn" onclick="my_modal_1.showModal()">open modal</button> -->
       <dialog id="my_modal_1" class="modal">
@@ -101,6 +107,7 @@
           
         </div>
       </dialog>
+      
     </main>
     <script src="./function.js"></script>
   </body>
