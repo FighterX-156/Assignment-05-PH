@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>GitHub Issue Tracker</title>
+    <title>GitHub Issue Tracker Log-in</title>
     <!-- Google Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -27,88 +27,61 @@
     />
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   </head>
-  <body class="bg-[#F8FAFC]">
-    <!-- Nav-Bar -->
-    <nav>
-      <div class="navbar bg-white shadow-sm flex justify-between">
-        <div class="flex items-center gap-2 px-4">
-          <img src="./assets/github-logo.png" alt="github-logo" class="w-9" />
-          <p class="text-xl font-semibold">GitHub Issue Tracker</p>
-        </div>
-        <div class="flex gap-2 px-4">
-          <input
-           id="search-box"
-            type="text"
-            placeholder="Search"
-            class="input input-bordered w-24 md:w-auto"
-          />
-          <button id="btn-search" class="btn btn-primary">
-            <i class="fa-solid fa-magnifying-glass"></i>
-          </button>
-        </div>
-      </div>
-    </nav>
-    <!-- Nav-Bar done!!-->
-    <main class="h-svh">
-      <!-- Button-Bundle -->
-      <div
-        class="bg-white p-6 mx-auto my-8 w-10/12 rounded-xl shadow-sm flex gap-3"
-      >
-        <button id="btnAll" class="btnA btn btn-outline btn-primary">All</button>
-        <button id="btnOpen" class="btnA btn btn-outline btn-primary">Open</button>
-        <button id="btnClosed" class="btnA btn btn-outline btn-primary">Closed</button>
-      </div>
-      <!-- Button-Bundle done-->
-      <!-- status bar -->
-      <div
-        class="status-bar bg-white px-6 py-3 mx-auto my-2 w-10/12 rounded-xl flex items-center justify-between"
-      >
-        <!-- icon + title text -->
-        <div class="flex flex-col  md:flex-row gap-2 items-center">
-          <img
-            src="./assets/Aperture.png"
-            alt="logo"
-            class="bg-[#ECE4FF] p-2 rounded-full self-start"
-          />
-          <div class="issueNumber flex flex-row gap-6 md:flex-col ">
-            <p class="issue-Num font-bold">{$}Issues</p>
-            <p class="text-[#64748B]">Track and manage your project issues</p>
-          </div>
-        </div>
-        <!-- icon + title text done-->
-        <!-- open or close signal -->
-        <div class="p-4 flex flex-col md:flex-row gap-2 justify-center">
-          <div class="p-4 flex justify-center items-center gap-2">
-            <div class="w-3 p-2 bg-[#00A96E] rounded-full"></div>
-            <span>Open</span>
-          </div>
-          <div class="p-4 flex justify-center items-center gap-2">
-            <div class="w-3 p-2 bg-[#A855F7] rounded-full"></div>
-            <span>Closed</span>
-          </div>
-        </div>
-        <!-- open or close signal end -->
-      </div>
-      <!-- status bar done-->
-      <div
-        id="classContainer"
-        class="class-container p-4 mx-auto w-10/12 rounded-xl grid grid-cols-1     md:grid-cols-3 gap-4"
-      > </div>
-    <section id="loading" class="Loading flex items-center justify-center py-10 hidden">
-      <span class="loading loading-infinity loading-xl text-primary ">
-      </span>
-    </section>
-    
-   
-      <!-- Open the modal using ID.showModal() method -->
-      <!-- <button class="btn" onclick="my_modal_1.showModal()">open modal</button> -->
-      <dialog id="my_modal_1" class="modal">
-        <div class="modal-box">
-          
-        </div>
-      </dialog>
+  <body>
+    <section id="Login-page" class="h-svh bg-[#F8FAFC] flex flex-col justify-center items-center ">
       
-    </main>
-    <script src="./function.js"></script>
+      <div class="Login-Page ">
+        <fieldset
+          class="mx-auto fieldset bg-white border-base-300 rounded-box  w-xs border p-4"
+        >
+          <div
+            class="logo_text_container p-4 mx-auto flex flex-col items-center gap-3"
+          >
+            <img
+              src="./assets/github-logo.png"
+              alt="github-logo"
+              width="80px"
+            />
+            <span class="flex flex-col gap-1"
+              ><p class="text-base text-center font-bold">
+                GitHub Issues Tracker
+              </p>
+              <p class="text-sm text-center text-[#64748B]">
+                Sign in to manage your issues
+              </p></span
+            >
+          </div>
+
+          <label class="label text-black font-semibold mt-1">Username</label>
+          <input id="username" type="text" class="input" placeholder="Enter your username" />
+          <p class="text-[#4A00FF]">Default: admin</p>
+
+          <label class="label text-black font-semibold mt-1">Password</label>
+          <input
+            id="password"
+            type="password"
+            class="input"
+            placeholder="Enter your password"
+          />
+          <p class="text-[#4A00FF]">Default: admin123</p>
+
+          <button id="sign_btn" class="btn btn-primary bg-[#4A00FF] mt-4">Sign In</button>
+          <div class="relative p-4">
+            <hr class="text-[#64748B]" />
+            <p class="absolute bg-white p-1 text-base font bottom-[1px] mx-28">
+              or
+            </p>
+          </div>
+          <div class="space-y-2">
+            <p class="text-center text-[#64748B]">Demo Credentials:</p>
+            <div class="Credentials bg-[#F8FAFC] p-5">
+              <p class="text-center">Username: admin</p>
+              <p class="text-center">Password: admin123</p>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+    </section>
+    <script src="./login.js"></script>
   </body>
 </html>
