@@ -5,7 +5,7 @@ const sign_btn = document.getElementById("sign_btn");
 sign_btn.addEventListener("click", function () {
   //UserId && Pass validation
   if (userInput.value === "admin" && passInput.value === "admin123") {
-    window.location.replace("/home.html")
+    window.location.replace("./home.html")
   } else {
     alert("Wrong Username or Password")
   }
